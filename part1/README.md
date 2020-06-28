@@ -1,1 +1,1 @@
-Solutions of part 1 exercises to this folder, one app per folder
+Solutions to part 1 exercises in this folder, one app per folder
