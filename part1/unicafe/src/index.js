@@ -10,14 +10,16 @@ const Statistics = ({ good, bad, neutral }) => {
 		<div>
 			<h2>Statistics</h2>
 			{totalRatings ? (
-				<React.Fragment>
-					<Statistic value={good} text="good" />
-					<Statistic value={neutral} text="neutral" />
-					<Statistic value={bad} text="bad" />
-					<Statistic value={totalRatings} text="all" />
-					<Statistic value={averageScore ? averageScore : 0} text="average" />
-					<Statistic value={`${percentPositive ? percentPositive : 0} %`} text="positive" />
-				</React.Fragment>
+				<table>
+					<tbody>
+						<Statistic value={good} text="good" />
+						<Statistic value={neutral} text="neutral" />
+						<Statistic value={bad} text="bad" />
+						<Statistic value={totalRatings} text="all" />
+						<Statistic value={averageScore ? averageScore : 0} text="average" />
+						<Statistic value={`${percentPositive ? percentPositive : 0} %`} text="positive" />
+					</tbody>
+				</table>
 			) : (
 				<div>{`No feedback given`}</div>
 			)}
@@ -25,7 +27,12 @@ const Statistics = ({ good, bad, neutral }) => {
 	);
 };
 
-const Statistic = ({ text, value }) => <div>{`${text} ${value}`}</div>;
+const Statistic = ({ text, value }) => (
+	<tr>
+		<td>{text}</td>
+		<td>{value}</td>
+	</tr>
+);
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
 
