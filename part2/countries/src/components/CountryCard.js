@@ -10,7 +10,6 @@ export default function CountryCard(props) {
 	const [ weatherData, setWeatherData ] = useState({});
 
 	useEffect(() => {
-		console.log('Effect');
 		axios
 			.get(`http://api.weatherstack.com/current`, {
 				params : {

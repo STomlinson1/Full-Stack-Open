@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Weather({ data, capital }) {
 	const { current: { temperature, wind_speed, wind_dir, weather_icons } } = data;
-	console.log(data);
+
 	return (
 		<div>
 			<h3>Weather in {capital}</h3>
