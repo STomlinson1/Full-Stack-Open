@@ -29,6 +29,12 @@
       "date": "2020-07-09T17:11:39.546Z",
       "important": false,
       "id": 5
+    },
+    {
+      "content": "another test note",
+      "date": "2020-07-16T20:27:31.418Z",
+      "important": true,
+      "id": 6
     }
   ]
 }
