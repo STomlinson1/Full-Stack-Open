@@ -24,7 +24,7 @@ const App = () => {
 
 		noteService.create(noteObject).then((returnedNote) => {
 			setNotes([ ...notes, returnedNote ]);
-			setNewNote('');
+			setNewNote('Enter a new note');
 		});
 	};
 
@@ -47,11 +47,17 @@ const App = () => {
 		<div>
 			<h1>Notes</h1>
 			<div>
-				<button onClick={() => setShowAll(!showAll)}>show {showAll ? 'important' : 'all'}</button>
+				<button onClick={() => setShowAll(!showAll)}>
+					show {showAll ? 'important' : 'all'}
+				</button>
 			</div>
 			<ul>
 				{notesToShow.map((note) => (
-					<Note key={note.id} note={note} toggleImportance={() => toggleImportanceOf(note.id)} />
+					<Note
+						key={note.id}
+						note={note}
+						toggleImportance={() => toggleImportanceOf(note.id)}
+					/>
 				))}
 			</ul>
 			<form onSubmit={addNote}>
