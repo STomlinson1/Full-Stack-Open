@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import phoneService from './services/phonebook';
 
 import Filter from './components/Filter';
 import PersonList from './components/PersonList';
@@ -12,29 +13,55 @@ export default function App() {
 	const [ filter, setFilter ] = useState('');
 
 	useEffect(() => {
-		axios.get('http://localhost:3001/persons').then((response) => {
-			setPersons(response.data);
+		phoneService.getAll().then((phoneList) => {
+			setPersons(phoneList);
 		});
 	}, []);
 
 	const onFormSubmit = (e) => {
 		e.preventDefault();
 
-		const existInArr = persons.find((person) => person.name.toLowerCase() === newName.toLowerCase());
+		const personExist = persons.find(
+			(person) => person.name.toLowerCase() === newName.toLowerCase()
+		);
 
-		if (!existInArr) {
+		if (!personExist) {
 			const newPersonObject = {
 				name   : newName,
 				number : newPhoneNumber
 			};
 
-			setPersons([ ...persons, newPersonObject ]);
+			phoneService.create(newPersonObject).then((newPersonItem) => {
+				setPersons([ ...persons, newPersonItem ]);
+			});
 		} else {
-			alert(`${newName} is already added to the phonebook`);
+			const message = `${personExist.name} is already added to phonebook, replace the old number with a new one?`;
+
+			if (window.confirm(message)) {
+				const newPersonObject = { ...personExist, number: newPhoneNumber };
+
+				phoneService
+					.updateNumber(personExist.id, newPersonObject)
+					.then((response) => {
+						setPersons(
+							persons.map(
+								(person) => (person.id !== response.id ? person : response)
+							)
+						);
+					});
+			}
 		}
 
 		setNewName('');
 		setPhoneNumber('');
+	};
+
+	const removeEntry = (id, name) => {
+		if (window.confirm(`Delete ${name} ?`)) {
+			phoneService
+				.remove(id)
+				.then(setPersons(persons.filter((person) => person.id !== id)));
+		}
 	};
 
 	const onNameInputChange = (e) => {
@@ -49,7 +76,9 @@ export default function App() {
 		setFilter(e.target.value);
 	};
 
-	const filteredPersons = filter ? persons.filter((person) => person.name.toLowerCase().includes(filter)) : persons;
+	const filteredPersons = filter
+		? persons.filter((person) => person.name.toLowerCase().includes(filter))
+		: persons;
 
 	return (
 		<div>
@@ -62,7 +91,7 @@ export default function App() {
 				newPhoneNumber={newPhoneNumber}
 				onPhoneNumberInputChange={onPhoneNumberInputChange}
 			/>
-			<PersonList filteredPersons={filteredPersons} />
+			<PersonList filteredPersons={filteredPersons} removeEntry={removeEntry} />
 		</div>
 	);
 }
