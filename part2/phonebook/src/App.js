@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import phoneService from './services/phonebook';
 
 import Filter from './components/Filter';
 import PersonList from './components/PersonList';
 import PersonForm from './components/PersonForm';
+import Notfication from './components/Notification';
+import ErrorMessage from './components/ErrorMessage';
+
+import './index.css';
 
 export default function App() {
 	const [ persons, setPersons ] = useState([]);
 	const [ newName, setNewName ] = useState('');
 	const [ newPhoneNumber, setPhoneNumber ] = useState('');
 	const [ filter, setFilter ] = useState('');
+	const [ notificationMessage, setNotificationMessage ] = useState(null);
+	const [ errorMessage, setErrorMessage ] = useState(null);
 
 	useEffect(() => {
 		phoneService.getAll().then((phoneList) => {
@@ -33,6 +38,12 @@ export default function App() {
 
 			phoneService.create(newPersonObject).then((newPersonItem) => {
 				setPersons([ ...persons, newPersonItem ]);
+
+				setNotificationMessage(`Added ${newPersonItem.name}`);
+
+				setTimeout(() => {
+					setNotificationMessage(null);
+				}, 5000);
 			});
 		} else {
 			const message = `${personExist.name} is already added to phonebook, replace the old number with a new one?`;
@@ -48,6 +59,15 @@ export default function App() {
 								(person) => (person.id !== response.id ? person : response)
 							)
 						);
+					})
+					.catch((error) => {
+						setErrorMessage(
+							`Information of ${personExist.name} has already been removed from server`
+						);
+
+						setTimeout(() => {
+							setErrorMessage(null);
+						}, 5000);
 					});
 			}
 		}
@@ -83,6 +103,8 @@ export default function App() {
 	return (
 		<div>
 			<h1>Phonebook</h1>
+			<Notfication message={notificationMessage} />
+			<ErrorMessage message={errorMessage} />
 			<Filter filter={filter} onFilterChange={onFilterChange} />
 			<PersonForm
 				onFormSubmit={onFormSubmit}

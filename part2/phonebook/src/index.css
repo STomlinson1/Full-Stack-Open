@@ -1,0 +1,19 @@
+.notification {
+	background: rgb(194, 194, 194);
+	border: green 3px solid;
+	border-radius: 5px;
+	padding: 5px;
+	font-size: 20px;
+	color: green;
+	font-style: italic;
+}
+
+.error {
+	background: rgb(194, 194, 194);
+	border: red 3px solid;
+	border-radius: 5px;
+	padding: 5px;
+	font-size: 20px;
+	color: red;
+	font-style: italic;
+}
