@@ -1,7 +1,29 @@
 const express = require('express');
 const app = express();
 const PORT = 3001;
+const morgan = require('morgan');
+
+// Middlewares
+const requestLogger = (req, rep, next) => {
+	console.log('Method:', req.method);
+	console.log('Path:', req.path);
+	console.log('Body:', req.body);
+	console.log('-----');
+	next();
+};
+
+const unknowEndpoint = (req, res) => {
+	res.status(404).send({ error: 'unknown endpoint' });
+};
+
+morgan.token('content', (req) => JSON.stringify(req.body));
+
+//app.use(MIDDLEWARE) is how Middleware are taken into use
 app.use(express.json());
+app.use(
+	morgan(`:method :url :status :res[content-length] - :response-time ms :content`)
+);
+// app.use(requestLogger);
 
 let persons = [
 	{
@@ -92,6 +114,9 @@ app.post('/api/persons', (req, res) => {
 const generateId = () => {
 	return Math.floor(Math.random() * 10000000000 + 1);
 };
+
+//Add middleware for unknow routes
+app.use(unknowEndpoint);
 
 app.listen(PORT);
 console.log(`Server Running on Port ${PORT}`);
