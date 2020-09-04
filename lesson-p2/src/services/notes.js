@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3001/notes';
+const baseUrl = 'https://nameless-earth-57479.herokuapp.com/api/notes';
 
 const getAll = () => {
 	const request = axios.get(baseUrl);
